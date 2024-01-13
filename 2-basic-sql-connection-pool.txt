@@ -1,0 +1,16 @@
+use std::error::Error;
+
+use sqlx::{Connection, Row};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    let url = "postgres://PG_USER:PG_PASSWORD@HOST_NAME:5432/appdb";
+    let pool = sqlx::postgres::PgPool::connect(url).await?;
+
+    let res = sqlx::query("select 1 + 1 as sum").fetch_one(&pool).await?;
+
+    let sum: i32 = res.get("sum");
+    println!("From Pool Value is [{sum}]");
+
+    Ok(())
+}
